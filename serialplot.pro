@@ -30,12 +30,15 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = serialplot
 TEMPLATE = app
 
+include( /usr/local/Cellar/qwt-qt5/6.2.0/features/qwt.prf )
 CONFIG += qwt
 # LIBS += -lqwt # enable this line if qwt pri files aren't installed
 
 DEFINES += PROGRAM_NAME="\\\"serialplot\\\""
 
 DEFINES += VERSION_MAJOR=10 VERSION_MINOR=0 VERSION_PATCH=0 VERSION_STRING=\\\"10.0.0\\\"
+
+ICON    = misc/serialplot.icns
 
 SOURCES += \
     src/main.cpp \
