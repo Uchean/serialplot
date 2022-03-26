@@ -1,5 +1,5 @@
 /*
-  Copyright © 2021 Hasan Yavuz Özderya
+  Copyright © 2022 Hasan Yavuz Özderya
 
   This file is part of serialplot.
 
@@ -54,7 +54,7 @@ PortControl::PortControl(QSerialPort* port, QWidget* parent) :
 
     // setup actions
     openAction.setCheckable(true);
-    openAction.setShortcut(QKeySequence("F12"));
+    openAction.setShortcut(QKeySequence("Ctrl+O"));
     openAction.setToolTip("Open Port");
     QObject::connect(&openAction, &QAction::triggered,
                      this, &PortControl::openActionTriggered);
@@ -274,11 +274,18 @@ void PortControl::togglePort()
     }
     else
     {
+        QString portName;
+        QString portText = ui->cbPortList->currentText().trimmed();
+
+        if (portText.isEmpty())
+        {
+            qWarning() << "Select or enter a port name!";
+            return;
+        }
+
         // we get the port name from the edit text, which may not be
         // in the portList if user hasn't pressed Enter
-        // Also note that, portText may not be the `portName`
-        QString portText = ui->cbPortList->currentText();
-        QString portName;
+        // Also note that, portText may be different than `portName`
         int portIndex = portList.indexOf(portText);
         if (portIndex < 0) // not in list, add to model and update the selections
         {
@@ -328,7 +335,7 @@ void PortControl::selectListedPort(QString portName)
     QSerialPortInfo portInfo(portName);
     if (portInfo.isNull())
     {
-        qWarning() << "Device doesn't exists:" << portName;
+        qWarning() << "Device doesn't exist:" << portName;
     }
 
     // has selection actually changed
@@ -404,7 +411,7 @@ void PortControl::onPortError(QSerialPort::SerialPortError error)
             loadPortList();
             break;
         case QSerialPort::DeviceNotFoundError:
-            qCritical() << "Device doesn't exists: " << serialPort->portName();
+            qCritical() << "Device doesn't exist: " << serialPort->portName();
             break;
         case QSerialPort::PermissionError:
             qCritical() << "Permission denied. Either you don't have \
